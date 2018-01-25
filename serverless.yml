@@ -1,0 +1,82 @@
+service: vib-mon-sls 
+
+frameworkVersion: ">=1.1.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  # you can overwrite defaults here
+  stage: dev
+  region: ap-southeast-2
+  environment:
+    DYNAMODB_TABLE: ${self:service}-device-${opt:stage, self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+
+functions:
+  create:
+    handler: services/create.create
+    events:
+      - http:
+          path: device
+          method: post
+          cors: true
+
+  list:
+    handler: services/list.list
+    events:
+      - http:
+          path: device
+          method: get
+          cors: true
+
+  get:
+    handler: services/get.get
+    events:
+      - http:
+          path: device/{id}
+          method: get
+          cors: true
+
+  update:
+    handler: services/update.update
+    events:
+      - http:
+          path: device/{id}
+          method: put
+          cors: true
+
+  delete:
+    handler: device/delete.delete
+    events:
+      - http:
+          path: device/{id}
+          method: delete
+          cors: true
+
+resources:
+  Resources:
+    TodosDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
