@@ -27,7 +27,7 @@ functions:
     handler: services/create.create
     events:
       - http:
-          path: device
+          path: devices
           method: post
           cors: true
 
@@ -35,7 +35,7 @@ functions:
     handler: services/list.list
     events:
       - http:
-          path: device
+          path: devices
           method: get
           cors: true
 
@@ -43,7 +43,7 @@ functions:
     handler: services/get.get
     events:
       - http:
-          path: device/{id}
+          path: devices/{id}
           method: get
           cors: true
 
@@ -51,7 +51,7 @@ functions:
     handler: services/update.update
     events:
       - http:
-          path: device/{id}
+          path: devices/{id}
           method: put
           cors: true
 
@@ -59,10 +59,17 @@ functions:
     handler: device/delete.delete
     events:
       - http:
-          path: device/{id}
+          path: devices/{id}
           method: delete
           cors: true
-
+  
+  listAlert:
+    handler: services/alert.get
+    events:
+      - http:
+          path: devices/{id}/alerts
+          method: get
+          cors: true
 resources:
   Resources:
     TodosDynamoDbTable:
