@@ -10,6 +10,7 @@ provider:
   region: ap-southeast-2
   environment:
     DYNAMODB_TABLE: ${self:service}-device-${opt:stage, self:provider.stage}
+    DYNAMODB_ALERTS_TABLE: ${self:service}-alerts-${opt:stage, self:provider.stage}
     DYNAMODB_TABLE_TEST: DYNAMODB_TABLE_TESTTABLE
   iamRoleStatements:
     - Effect: Allow
@@ -20,7 +21,9 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+      Resource: 
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_ALERTS_TABLE}"
 
 functions:
   create:
@@ -72,7 +75,7 @@ functions:
           cors: true
 resources:
   Resources:
-    TodosDynamoDbTable:
+    DeviceDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
@@ -88,3 +91,20 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.DYNAMODB_TABLE}
+    
+    AlertDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.DYNAMODB_ALERTS_TABLE}
