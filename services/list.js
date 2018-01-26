@@ -9,6 +9,8 @@ const params = {
 
 module.exports.list = (event, context, callback) => {
   // fetch all todos from the database
+  console.log('DYNAMODB_TABLE_TEST*********************************')
+  console.log(process.env.DYNAMODB_TABLE_TEST)
   dynamoDb.scan(params, (error, result) => {
     // handle potential errors
     if (error) {

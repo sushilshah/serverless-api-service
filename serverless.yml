@@ -10,6 +10,7 @@ provider:
   region: ap-southeast-2
   environment:
     DYNAMODB_TABLE: ${self:service}-device-${opt:stage, self:provider.stage}
+    DYNAMODB_TABLE_TEST: DYNAMODB_TABLE_TESTTABLE
   iamRoleStatements:
     - Effect: Allow
       Action:
