@@ -68,6 +68,14 @@ functions:
           cors: true
   
   listAlert:
+    handler: services/alert-list.list
+    events:
+      - http:
+          path: alerts 
+          method: get
+          cors: true
+
+  listDeviceAlert:
     handler: services/alert.get
     events:
       - http:
