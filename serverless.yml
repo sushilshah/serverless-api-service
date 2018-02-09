@@ -13,6 +13,11 @@ provider:
     DYNAMODB_TABLE: ${self:service}-device-${opt:stage, self:provider.stage}
     DYNAMODB_ALERTS_TABLE: ${self:service}-alerts-${opt:stage, self:provider.stage}
     DYNAMODB_TABLE_TEST: DYNAMODB_TABLE_TESTTABLE
+    # DEVICE_READINGS_DYNAMODB_TABLE: vib-mon-sls-device-readings-dev
+    # DEVICE_READINGS_DYNAMODB_TABLE: vib-mon-sls-device-readings-dev
+    DEVICE_READINGS_DYNAMODB_TABLE: ${self:service}-device-readings-${opt:stage, self:provider.stage}
+
+
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -25,6 +30,7 @@ provider:
       Resource: 
         - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
         - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_ALERTS_TABLE}"
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DEVICE_READINGS_DYNAMODB_TABLE}"
 
 functions:
   create:
@@ -67,7 +73,7 @@ functions:
           method: delete
           cors: true
   
-  listAlert:
+  list-alert:
     handler: services/alert-list.list
     events:
       - http:
@@ -75,11 +81,19 @@ functions:
           method: get
           cors: true
 
-  listDeviceAlert:
+  list-device-alert:
     handler: services/alert.get
     events:
       - http:
           path: devices/{id}/alerts
+          method: get
+          cors: true
+
+  device-readings:
+    handler: services/list.getReadings
+    events:
+      - http:
+          path: devices/{id}/readings
           method: get
           cors: true
 resources:
