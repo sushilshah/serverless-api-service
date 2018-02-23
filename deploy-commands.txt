@@ -1,0 +1,5 @@
+serverless deploy function -f functionName
+
+sls deploy
+
+sls remove

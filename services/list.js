@@ -23,9 +23,22 @@ module.exports.list = (event, context, callback) => {
       return;
     }
 
+    // const response = {
+    //   statusCode: 200,
+    //   headers: {
+    //     "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+    //     "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+    //   },
+    //   body: JSON.stringify({ "message": "Hello World!" })
+    // };
+
     // create a response
     const response = {
       statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+        "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+      },
       body: JSON.stringify(result.Items),
     };
     callback(null, response);
@@ -63,6 +76,10 @@ module.exports.getReadings = (event, context, callback) => {
     // create a response
     const response = {
       statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+        "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+      },
       body: JSON.stringify(result.Items),
     };
     callback(null, response);

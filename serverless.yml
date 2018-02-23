@@ -96,37 +96,37 @@ functions:
           path: devices/{id}/readings
           method: get
           cors: true
-resources:
-  Resources:
-    DeviceDynamoDbTable:
-      Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
-      Properties:
-        AttributeDefinitions:
-          -
-            AttributeName: id
-            AttributeType: S
-        KeySchema:
-          -
-            AttributeName: id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.DYNAMODB_TABLE}
-    AlertDynamoDbTable:
-      Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
-      Properties:
-        AttributeDefinitions:
-          -
-            AttributeName: id
-            AttributeType: S
-        KeySchema:
-          -
-            AttributeName: id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.DYNAMODB_ALERTS_TABLE}
+# resources:
+#   Resources:
+#     DeviceDynamoDbTable:
+#       Type: 'AWS::DynamoDB::Table'
+#       DeletionPolicy: Retain
+#       Properties:
+#         AttributeDefinitions:
+#           -
+#             AttributeName: id
+#             AttributeType: S
+#         KeySchema:
+#           -
+#             AttributeName: id
+#             KeyType: HASH
+#         ProvisionedThroughput:
+#           ReadCapacityUnits: 1
+#           WriteCapacityUnits: 1
+#         TableName: ${self:provider.environment.DYNAMODB_TABLE}
+#     AlertDynamoDbTable:
+#       Type: 'AWS::DynamoDB::Table'
+#       DeletionPolicy: Retain
+#       Properties:
+#         AttributeDefinitions:
+#           -
+#             AttributeName: id
+#             AttributeType: S
+#         KeySchema:
+#           -
+#             AttributeName: id
+#             KeyType: HASH
+#         ProvisionedThroughput:
+#           ReadCapacityUnits: 1
+#           WriteCapacityUnits: 1
+#         TableName: ${self:provider.environment.DYNAMODB_ALERTS_TABLE}

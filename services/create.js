@@ -5,7 +5,7 @@ const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-depe
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-module.exports.create = (event, context, callback) => {
+module.exports.create_org = (event, context, callback) => {
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
   if (typeof data.text !== 'string') {
@@ -48,5 +48,23 @@ module.exports.create = (event, context, callback) => {
       body: JSON.stringify(params.Item),
     };
     callback(null, response);
+  });
+};
+
+
+module.exports.create = (event, context, callback) => {
+
+  return callback(null, {
+    statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+      "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+    },
+    body: JSON.stringify({
+      message: 'Hello nice to meet you!',
+      input: event,
+      TableName: process.env.DYNAMODB_TABLE,
+      AnotherTableName: process.env.DYNAMODB_TABLE_TEST
+    }),
   });
 };
