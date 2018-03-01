@@ -52,24 +52,34 @@ module.exports.create_org = (event, context, callback) => {
 };
 
 
-module.exports.create_test = (event, context, callback) => {
-
+module.exports.create = (event, context, callback) => {
+  console.log("Event received");
+  console.log(event.body);
+  console.log(event);
   return callback(null, {
     statusCode: 200,
     headers: {
       "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
       "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
     },
-    body: JSON.stringify({
-      message: 'Hello nice to meet you!',
-      input: event,
-      TableName: process.env.DYNAMODB_TABLE,
-      AnotherTableName: process.env.DYNAMODB_TABLE_TEST
-    }),
+    body: JSON.stringify(event.body),
   });
+  // return callback(null, {
+  //   statusCode: 200,
+  //   headers: {
+  //     "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+  //     "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+  //   },
+  //   body: JSON.stringify({
+  //     message: 'Hello nice to meet you!',
+  //     input: event,
+  //     TableName: process.env.DYNAMODB_TABLE,
+  //     AnotherTableName: process.env.DYNAMODB_TABLE_TEST
+  //   }),
+  // });
 };
 
-module.exports.create = (event, context, callback) => {
+module.exports.create1 = (event, context, callback) => {
   console.log("Event input body");
   console.log(event);
   console.log(event.body);
