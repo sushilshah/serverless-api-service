@@ -52,7 +52,7 @@ module.exports.create_org = (event, context, callback) => {
 };
 
 
-module.exports.create = (event, context, callback) => {
+module.exports.create_test = (event, context, callback) => {
 
   return callback(null, {
     statusCode: 200,
@@ -67,4 +67,68 @@ module.exports.create = (event, context, callback) => {
       AnotherTableName: process.env.DYNAMODB_TABLE_TEST
     }),
   });
+};
+
+module.exports.create = (event, context, callback) => {
+  console.log("Event input body");
+  console.log(event);
+  console.log(event.body);
+
+  var lambda = new AWS.Lambda();
+  var payload = {
+    "id" : "namah",
+    "humidity" : 10,
+    "x" : 12,
+    "y": 11
+   }
+  var params = {
+    FunctionName: 'device-message-receiver', // the lambda function we are going to invoke
+    InvocationType: 'RequestResponse',
+    LogType: 'Tail',
+    Payload: JSON.stringify(payload)
+  };
+
+  lambda.invoke(params, function(err, data) {
+    console.log("Lambda invoke");
+    console.log(data);
+    console.log("error");
+    console.log(err);
+    if (err) {
+      callback(null, {
+        statusCode: err.statusCode || 501,
+        headers: {
+          "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+          "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+        },
+        body: 'Couldn\'t fetch the todo item.',
+      });
+      return;
+    } 
+     // create a response
+     const response = {
+      statusCode: 200,
+      headers: {
+          "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+          "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+      },
+      body: data.Payload,
+    };
+    callback(null, response);
+  })
+
+
+
+  // return callback(null, {
+  //   statusCode: 200,
+  //   headers: {
+  //     "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+  //     "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+  //   },
+  //   body: JSON.stringify({
+  //     message: 'Hello nice to meet you!',
+  //     input: event,
+  //     TableName: process.env.DYNAMODB_TABLE,
+  //     AnotherTableName: process.env.DYNAMODB_TABLE_TEST
+  //   }),
+  // });
 };
