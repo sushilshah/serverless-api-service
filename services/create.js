@@ -52,7 +52,7 @@ module.exports.create_org = (event, context, callback) => {
 };
 
 
-module.exports.create = (event, context, callback) => {
+module.exports.create_test = (event, context, callback) => {
   console.log("Event received");
   console.log(event.body);
   console.log(event);
@@ -64,38 +64,31 @@ module.exports.create = (event, context, callback) => {
     },
     body: JSON.stringify(event.body),
   });
-  // return callback(null, {
-  //   statusCode: 200,
-  //   headers: {
-  //     "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
-  //     "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
-  //   },
-  //   body: JSON.stringify({
-  //     message: 'Hello nice to meet you!',
-  //     input: event,
-  //     TableName: process.env.DYNAMODB_TABLE,
-  //     AnotherTableName: process.env.DYNAMODB_TABLE_TEST
-  //   }),
-  // });
+ 
 };
 
-module.exports.create1 = (event, context, callback) => {
+module.exports.create = (event, context, callback) => {
   console.log("Event input body");
   console.log(event);
   console.log(event.body);
 
   var lambda = new AWS.Lambda();
-  var payload = {
-    "id" : "namah",
-    "humidity" : 10,
-    "x" : 12,
-    "y": 11
-   }
+  // var payload = {
+  //   "id" : "namah",
+  //   "humidity" : 10,
+  //   "x" : 12,
+  //   "y": 11
+  //  }
+  var payload = event.body;
+  console.log("with payload");
+  console.log(payload);
+
+    // Payload: JSON.stringify(payload)
   var params = {
-    FunctionName: 'device-message-receiver', // the lambda function we are going to invoke
+    FunctionName: 'device-message-receiver-bulk', // the lambda function we are going to invoke
     InvocationType: 'RequestResponse',
     LogType: 'Tail',
-    Payload: JSON.stringify(payload)
+    Payload: payload
   };
 
   lambda.invoke(params, function(err, data) {
@@ -126,19 +119,57 @@ module.exports.create1 = (event, context, callback) => {
     callback(null, response);
   })
 
-
-
-  // return callback(null, {
-  //   statusCode: 200,
-  //   headers: {
-  //     "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
-  //     "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
-  //   },
-  //   body: JSON.stringify({
-  //     message: 'Hello nice to meet you!',
-  //     input: event,
-  //     TableName: process.env.DYNAMODB_TABLE,
-  //     AnotherTableName: process.env.DYNAMODB_TABLE_TEST
-  //   }),
-  // });
 };
+
+
+module.exports.createT = (event, context, callback) => {
+  console.log("Event input body");
+  console.log(event);
+  console.log(event.body);
+
+  let responses = [];
+  // for(var item in event.body){
+    // console.log("invoke lambda with payload");
+    // console.log(event.body[item]);
+    // let resp = invokeLambdaFun(event.body[item]);
+    // console.log("lambda otuput");
+    // console.log(resp);
+    // responses.push(resp);
+  // }
+
+     // create a response
+  const response = {
+    statusCode: 200,
+    headers: {
+        "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+        "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+    },
+    body: responses,
+  };  
+  console.log("return response ");
+  console.log(response);
+  callback(null, response);
+};
+
+
+function invokeLambdaFun(payload){
+     // Payload: JSON.stringify(payload)
+    var lambda = new AWS.Lambda();
+    var params = {
+      FunctionName: 'device-message-receiver', // the lambda function we are going to invoke
+      InvocationType: 'RequestResponse',
+      LogType: 'Tail',
+      Payload: payload
+    };
+
+    lambda.invoke(params, function(err, data) {
+      console.log("Lambda invoke");
+      console.log(data);
+      console.log("error");
+      console.log(err);
+      if (err) {
+        return err;
+      } 
+      return data.Payload;
+    });
+}
